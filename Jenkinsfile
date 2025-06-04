@@ -7,7 +7,7 @@ pipeline {
     }
     stages {
         stage('Checkout') {
-            steps { git 'https://bitbucket.org/raja_rao_k/cicd_repo.git' }
+            steps { git 'https://github.com/rajatphoneix/cicd_demo.git' }
         }
         stage('Unit Tests') {
             steps { sh 'mvn clean test' }
