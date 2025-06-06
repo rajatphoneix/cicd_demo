@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "rajaraok2109/patient-service"
+        IMAGE_NAME = "rajatphoneix/patient-service"
         IMAGE_TAG = "${BUILD_NUMBER}"
         ECR_REPO = "390844763711.dkr.ecr.ap-south-1.amazonaws.com/patient-service"
     }
