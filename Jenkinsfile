@@ -4,7 +4,9 @@ pipeline {
     environment {
         IMAGE_NAME = "rajatphoneix/patient-service"
         IMAGE_TAG = "${BUILD_NUMBER}"
-        ECR_REPO = "390844763711.dkr.ecr.ap-south-1.amazonaws.com/patient-service"
+        AWS_REGION = "ap-south-1"
+        ECR_REGISTRY = "390844763711.dkr.ecr.ap-south-1.amazonaws.com"
+        ECR_REPO = "${ECR_REGISTRY}/patient-service"
     }
 
     stages {
@@ -14,37 +16,43 @@ pipeline {
             }
         }
 
-        /* stage('Unit Tests') {
-            steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    sh 'mvn -B clean test'
-                }
-            }
-        } */
+        // Optional - uncomment if you want to re-enable tests
+       stage('Unit Tests') {
+           steps {
+               catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                   sh 'mvn -B test -fae'
+               }
+           }
+           post {
+               always {
+                   junit '**/target/surefire-reports/*.xml'
+               }
+           }
+       }
 
         stage('Build Artifact') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                sh 'mvn clean package -Dmaven.test.skip=true'
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+                sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
             }
         }
 
-         stage('Push to ECR') {
-                    steps {
-                        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
-                            sh """
-                                set -x
-                                aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
-                                docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${ECR_REPO}:${IMAGE_TAG}
-                                docker push ${ECR_REPO}:${IMAGE_TAG}
-                            """
-                        }
-                    }
+        stage('Push to ECR') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
+                    sh """
+                        set -x
+                        aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+                        docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${ECR_REPO}:${IMAGE_TAG}
+                        docker push ${ECR_REPO}:${IMAGE_TAG}
+                    """
+                }
+            }
         }
     }
 }
