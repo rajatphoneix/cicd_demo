@@ -16,7 +16,9 @@ pipeline {
 
         stage('Unit Tests') {
             steps {
-                sh 'mvn clean test'
+                timeout(time: 2, unit: 'MINUTES') {
+                    sh 'mvn -B clean test'
+                }
             }
         }
 
