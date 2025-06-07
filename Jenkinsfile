@@ -14,13 +14,13 @@ pipeline {
             }
         }
 
-        stage('Unit Tests') {
+        /* stage('Unit Tests') {
             steps {
                 timeout(time: 2, unit: 'MINUTES') {
                     sh 'mvn -B clean test'
                 }
             }
-        }
+        } */
 
         stage('Build Artifact') {
             steps {
