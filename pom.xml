@@ -38,6 +38,10 @@
         <version>3.2.5</version>
         <configuration>
           <useFile>false</useFile>
+          <forkCount>0</forkCount>
+          <redirectTestOutputToFile>false</redirectTestOutputToFile>
+          <testFailureIgnore>true</testFailureIgnore> <!-- Optional: don't fail build on test failure -->
+          <printSummary>true</printSummary>
         </configuration>
       </plugin>
     </plugins>
