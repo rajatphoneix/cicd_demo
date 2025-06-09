@@ -13,6 +13,6 @@ class HelloControllerTest {
     void helloShouldReturnGreeting() {
         HelloController controller = new HelloController();
         String response = controller.hello();
-        assertEquals("Hello there, ModMed CI/CD!!", response);
+        assertEquals("Hello there, ModMed CI/CD!", response);
     }
 }
