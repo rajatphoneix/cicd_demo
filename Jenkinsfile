@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "rajatphoneix/patient-service"
+        IMAGE_NAME = "rajatphoneix/cicd_demo"
         IMAGE_TAG = "${BUILD_NUMBER}"
         AWS_REGION = "ap-south-1"
         ECR_REGISTRY = "390844763711.dkr.ecr.ap-south-1.amazonaws.com"
-        ECR_REPO = "${ECR_REGISTRY}/patient-service"
+        ECR_REPO = "${ECR_REGISTRY}/cicd_demo"
     }
 
     stages {
