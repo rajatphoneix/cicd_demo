@@ -6,7 +6,7 @@ pipeline {
         IMAGE_TAG = "${BUILD_NUMBER}"
         AWS_REGION = "ap-south-1"
         ECR_REGISTRY = "390844763711.dkr.ecr.ap-south-1.amazonaws.com"
-        ECR_REPO = "${ECR_REGISTRY}/cicd_demo"
+        ECR_REPO = "${ECR_REGISTRY}/cicd_demo_repo"
     }
 
     stages {
