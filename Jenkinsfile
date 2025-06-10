@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    tools {
+      maven 'Maven_3.8.8' // Must match the name you gave in UI
+    }
     environment {
         IMAGE_NAME = "rajatphoneix/cicd_demo"
         IMAGE_TAG = "${BUILD_NUMBER}"
