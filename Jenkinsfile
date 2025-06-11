@@ -44,18 +44,32 @@ pipeline {
             }
         }
 
-        stage('Push to ECR') {
+        stage('Docker Push to ECR') {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
-                    sh """
-                        set -x
+                    sh '''
                         aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+
+                        # Push with build number tag
                         docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${ECR_REPO}:${IMAGE_TAG}
                         docker push ${ECR_REPO}:${IMAGE_TAG}
-                    """
+
+                        # Check if 'latest' tag exists
+                        TAG_EXISTS=$(aws ecr describe-images --repository-name cicd_demo_repo --region ${AWS_REGION} \
+                          --query "imageDetails[?contains(imageTags, 'latest')].imageTags" --output text)
+
+                        if [ -z "$TAG_EXISTS" ]; then
+                            echo "No 'latest' tag found. Pushing with 'latest' tag..."
+                            docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${ECR_REPO}:latest
+                            docker push ${ECR_REPO}:latest
+                        else
+                            echo "'latest' tag already exists."
+                        fi
+                    '''
                 }
             }
-          }
+        }
+
         stage('Deploy to ECS') {
            steps {
                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
