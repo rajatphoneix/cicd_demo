@@ -55,6 +55,16 @@ pipeline {
                     """
                 }
             }
+                 stage('Deploy to ECS') {
+                     steps {
+                         script {
+                             sh """
+                             aws ecs update-service --cluster springboot-cluster --service springboot-service  --force-new-deployment --region ${AWS_REGION}
+                             """
+                         }
+                     }
+                 }
+
         }
     }
 }
