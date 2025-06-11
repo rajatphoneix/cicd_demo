@@ -60,11 +60,11 @@ pipeline {
            steps {
                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
                    sh """
-                       aws ecs update-service
-                       --cluster springboot-cluster
-                       --service springboot-service
-                       --force-new-deployment
-                       --region $AWS_REGION
+                       aws ecs update-service \
+                         --cluster springboot-cluster \
+                         --service springboot-service \
+                         --force-new-deployment \
+                         --region ap-south-1
                     """
                         }
                     }
